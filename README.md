@@ -11,8 +11,8 @@ The main objective is to investigate how different types of information and mode
 The study compares:
 
 1. **Conventional machine learning models** trained on structured pre-match statistical data.
-2. **Von trained on pre-match football articles**, using unstructured textual information from sources such as Sports Mole.
-3. **Von trained on both football articles and structured statistical data**, examining whether Von can benefit from combining textual and numerical information.
+2. **Von fine-tuned on pre-match football articles**, using unstructured textual information from sources such as Sports Mole.
+3. **Von fine-tuned on both football articles and structured statistical data**, examining whether Von can benefit from combining textual and numerical information.
 4. **Hybrid models**, where Von's predictions are provided as additional features to conventional machine learning models.
 
 The models will be evaluated using historical football match data while ensuring that only information available before each match is used for prediction.
