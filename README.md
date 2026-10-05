@@ -1,6 +1,6 @@
 # Football Match Prediction with Von
 
-This repository contains the research project for a master's thesis investigating the use of **Von**, an open-source System One model, for football match outcome prediction.
+This repository contains the research project for a master's thesis investigating the use of **Von**, an open-source System One model, for football match outcome prediction on English Premier League.
 
 The study examines whether information contained in **pre-match football articles** can improve match outcome predictions, and how Von compares with conventional machine learning models based on structured statistical data.
 
