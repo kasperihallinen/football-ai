@@ -1,41 +1,161 @@
-# Premier League teams and their corresponding years of participation in the league from 2012 to 2026. The year can represent either the start or end of the season, depending on the context. For example, "2012" can represent the 2011-2012 season or the 2012-2013 season.
+# Premier League teams and their corresponding years of participation in the league from 2012 to 2026. 
+# The keys are the team names as they appear in the Sports Mole URL paths, e.g. /brighton-and-hove-albion/.
+# vs_name is the name of the team as it appears in the "team1-vs-team2" part of the Sports Mole filenames, 
+# e.g. brighton-vs-millwall_59804.html.
+# The year can represent either the start or end of the season, depending on the context. 
+# For example, "2012" can represent the 2011-2012 season or the 2012-2013 season. 
+# all_names is a list of all the names that Sports Mole can use to refer to the team in their URLs.
 PREMIER_LEAGUE_TEAMS = {
-    "arsenal": [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
-    "aston-villa": [2012, 2013, 2014, 2015, 2016, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
-    "bournemouth": [2015, 2016, 2017, 2018, 2019, 2020, 2022, 2023, 2024, 2025, 2026],
-    "brentford": [2021, 2022, 2023, 2024, 2025, 2026],
-    "brighton-and-hove-albion": [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
-    "burnley": [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
-    "cardiff-city": [2013, 2014, 2018, 2019],
-    "chelsea": [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
-    "coventry-city": [2026],
-    "crystal-palace": [2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
-    "everton": [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
-    "fulham": [2012, 2013, 2014, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
-    "huddersfield-town": [2017, 2018, 2019,],
-    "hull-city": [2013, 2014, 2015, 2016, 2017, 2026],
-    "ipswich-town": [2024, 2025, 2026],
-    "leeds-united": [2020, 2021, 2022, 2023, 2025, 2026],
-    "leicester-city": [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
-    "liverpool": [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
-    "luton-town": [2023, 2024],
-    "man-city": [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
-    "man-utd": [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
-    "middlesbrough": [2016, 2017],
-    "newcastle-united": [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
-    "norwich-city": [2012, 2013, 2014, 2015, 2016, 2019, 2020, 2021, 2022],
-    "nottingham-forest": [2022, 2023, 2024, 2025, 2026],
-    "qpr": [2012, 2013, 2014, 2015],
-    "reading": [2012, 2013],
-    "sheffield-united": [2019, 2020, 2021, 2023, 2024],
-    "southampton": [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
-    "stoke-city": [2012, 2013, 2014, 2015, 2016, 2017, 2018],
-    "sunderland": [2012, 2013, 2014, 2015, 2016, 2017, 2025, 2026],
-    "swansea-city": [2012, 2013, 2014, 2015, 2016, 2017, 2018],
-    "spurs": [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
-    "watford": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022],
-    "west-brom-albion": [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2020, 2021],
-    "west-ham-united": [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
-    "wigan-athletic": [2012, 2013],
-    "wolves": [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]
+    "arsenal": {
+        "seasons": {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026},
+        "all_names": ['arsenal'],
+    },
+    "aston-villa": {
+        "seasons": {2012, 2013, 2014, 2015, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026},
+        "all_names": ['aston-villa'],
+    },
+    "bournemouth": {
+        "seasons": {2015, 2016, 2017, 2018, 2019, 2022, 2023, 2024, 2025, 2026},
+        "all_names": ['bournemouth'],
+    },
+    "brentford": {
+        "seasons": {2021, 2022, 2023, 2024, 2025, 2026},
+        "all_names": ['brentford'],
+    },
+    "brighton-and-hove-albion": {
+        "seasons": {2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026},
+        "all_names": ['brighton-and-hove-albion', 'brighton', 'brighton-&-hove-albion'],
+    },
+    "burnley": {
+        "seasons": {2014, 2016, 2017, 2018, 2019, 2020, 2021, 2023, 2025},
+        "all_names": ['burnley'],
+    },
+    "cardiff-city": {
+        "seasons": {2013, 2018},
+        "all_names": ['cardiff-city', 'cardiff'],
+    },
+    "chelsea": {
+        "seasons": {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026},
+        "all_names": ['chelsea'],
+    },
+    "coventry-city": {
+        "seasons": {2026},
+        "all_names": ['coventry-city', 'coventry'],
+    },
+    "crystal-palace": {
+        "seasons": {2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026},
+        "all_names": ['crystal-palace', 'palace'],
+    },
+    "everton": {
+        "seasons": {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026},
+        "all_names": ['everton'],
+    },
+    "fulham": {
+        "seasons": {2012, 2013, 2018, 2020, 2022, 2023, 2024, 2025, 2026},
+        "all_names": ['fulham'],
+    },
+    "huddersfield-town": {
+        "seasons": {2017, 2018},
+        "all_names": ['huddersfield-town', 'huddersfield'],
+    },
+    "hull-city": {
+        "seasons": {2013, 2014, 2016, 2026},
+        "all_names": ['hull-city', 'hull'],
+    },
+    "ipswich-town": {
+        "seasons": {2024, 2026},
+        "all_names": ['ipswich-town', 'ipswich'],
+    },
+    "leeds-united": {
+        "seasons": {2020, 2021, 2022, 2025, 2026},
+        "all_names": ['leeds-united', 'leeds'],
+    },
+    "leicester-city": {
+        "seasons": {2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024},
+        "all_names": ['leicester-city', 'leicester'],
+    },
+    "liverpool": {
+        "seasons": {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026},
+        "all_names": ['liverpool'],
+    },
+    "luton-town": {
+        "seasons": {2023},
+        "all_names": ['luton-town', 'luton'],
+    },
+    "man-city": {
+        "seasons": {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026},
+        "all_names": ['man-city', 'manchester-city'],
+    },
+    "man-utd": {
+        "seasons": {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026},
+        "all_names": ['man-utd', 'manchester-united'],
+    },
+    "middlesbrough": {
+        "seasons": {2016},
+        "all_names": ['middlesbrough'],
+    },
+    "newcastle-united": {
+        "seasons": {2012, 2013, 2014, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026},
+        "all_names": ['newcastle-united', 'newcastle'],
+    },
+    "norwich-city": {
+        "seasons": {2012, 2013, 2015, 2019, 2021},
+        "all_names": ['norwich-city', 'norwich'],
+    },
+    "nottingham-forest": {
+        "seasons": {2022, 2023, 2024, 2025, 2026},
+        "all_names": ['nottingham-forest', 'nottm-forest'],
+    },
+    "qpr": {
+        "seasons": {2012, 2014},
+        "all_names": ['qpr', 'queens-park-rangers'],
+    },
+    "reading": {
+        "seasons": {2012},
+        "all_names": ['reading'],
+    },
+    "sheffield-united": {
+        "seasons": {2019, 2020, 2023},
+        "all_names": ['sheffield-united', 'sheff-utd'],
+    },
+    "southampton": {
+        "seasons": {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024},
+        "all_names": ['southampton'],
+    },
+    "stoke-city": {
+        "seasons": {2012, 2013, 2014, 2015, 2016, 2017},
+        "all_names": ['stoke-city', 'stoke'],
+    },
+    "sunderland": {
+        "seasons": {2012, 2013, 2014, 2015, 2016, 2025, 2026},
+        "all_names": ['sunderland'],
+    },
+    "swansea-city": {
+        "seasons": {2012, 2013, 2014, 2015, 2016, 2017},
+        "all_names": ['swansea-city', 'swansea'],
+    },
+    "spurs": {
+        "seasons": {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026},
+        "all_names": ['spurs', 'tottenham-hotspur', 'tottenham'],
+    },
+    "watford": {
+        "seasons": {2015, 2016, 2017, 2018, 2019, 2021},
+        "all_names": ['watford'],
+    },
+    "west-brom-albion": {
+        "seasons": {2012, 2013, 2014, 2015, 2016, 2017, 2020},
+        "all_names": ['west-brom-albion', 'west-brom'],
+    },
+    "west-ham-united": {
+        "seasons": {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025},
+        "all_names": ['west-ham-united', 'west-ham'],
+    },
+    "wigan-athletic": {
+        "seasons": {2012},
+        "all_names": ['wigan-athletic', 'wigan'],
+    },
+    "wolves": {
+        "seasons": {2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025},
+        "all_names": ['wolves', 'wolverhampton'],
+    }
 }
