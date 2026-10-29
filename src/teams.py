@@ -1,10 +1,9 @@
 # Premier League teams and their corresponding years of participation in the league from 2012 to 2026. 
 # The keys are the team names as they appear in the Sports Mole URL paths, e.g. /brighton-and-hove-albion/.
-# vs_name is the name of the team as it appears in the "team1-vs-team2" part of the Sports Mole filenames, 
-# e.g. brighton-vs-millwall_59804.html.
+# The names are in lowercase and use hyphens instead of spaces.
 # The year can represent either the start or end of the season, depending on the context. 
 # For example, "2012" can represent the 2011-2012 season or the 2012-2013 season. 
-# all_names is a list of all the names that Sports Mole can use to refer to the team in their URLs.
+# all_names is a list of all the names that Sports Mole can use to refer to the team in their URLs or headers.
 PREMIER_LEAGUE_TEAMS = {
     "arsenal": {
         "seasons": {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026},
@@ -104,7 +103,7 @@ PREMIER_LEAGUE_TEAMS = {
     },
     "nottingham-forest": {
         "seasons": {2022, 2023, 2024, 2025, 2026},
-        "all_names": ['nottingham-forest', 'nottm-forest'],
+        "all_names": ['nottingham-forest', 'nottm-forest', "nott'm-forest"],
     },
     "qpr": {
         "seasons": {2012, 2014},
