@@ -1,0 +1,23 @@
+{
+  "FA Cup": {
+    "FBref": "FA Cup"
+  },
+  "EFL Cup": {
+    "FBref": "EFL Cup"
+  },
+  "FA Community Shield": {
+    "FBref": "FA Community Shield"
+  },
+  "Champions League": {
+    "FBref": "UEFA Champions League"
+  },
+  "Europa League": {
+    "FBref": "UEFA Europa League"
+  },
+  "Conference League": {
+    "FBref": "UEFA Conference League"
+  },
+  "FIFA Club World Cup": {
+    "FBref": "FIFA Club World Cup"
+  }
+}

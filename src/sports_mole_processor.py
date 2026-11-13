@@ -6,12 +6,12 @@ from collections import defaultdict
 import os
 from pathlib import Path
 import json
-from teams import PREMIER_LEAGUE_TEAMS
+from teams import PREMIER_LEAGUE_TEAMS, get_unified_team_name
 
 # The parent folder where the HTML files of the preview articles are saved.
-BASE_PREVIEW_FOLDER = './data/raw_html_previews'
+BASE_PREVIEW_FOLDER = './data/sports_mole/raw_html_previews'
 # The parent folder where the data from the processed preview articles will be saved.
-BASE_PROCESSED_FOLDER = './data/processed_previews'
+BASE_PROCESSED_FOLDER = './data/sports_mole/processed_previews'
 # The raw articles were saved in yearly folders, but the processed data will be saved in seasonal folders, e.g. 2018_2019.
 SEASONAL_PROCESSED_FOLDER_FORMAT = os.path.join(BASE_PROCESSED_FOLDER, '{year_1}_{year_2}')
 # Phrases that Sports Mole uses to refer to the recent form of the teams.
@@ -32,12 +32,10 @@ REMOVE_STARTING_FROM_PHRASES = [
     'Top betting tip',
 ]   
 # Years to process. Change this list to process other years.
-YEARS_TO_PROCESS = ['2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026']
+YEARS = list(range(2018, 2028))
 
-# for folder_name in folder_names:
-for folder_name in YEARS_TO_PROCESS:
-    year = int(folder_name)
-    print(f"Processing preview articles for year {year}...")
+for year in YEARS:
+    print(f"\nProcessing preview articles for year {year}...")
 
     # Create the processed folders for the seasons starting previous year and this year if they don't exist.
     processed_folder_1 = SEASONAL_PROCESSED_FOLDER_FORMAT.format(year_1=year - 1, year_2=year)
@@ -45,7 +43,7 @@ for folder_name in YEARS_TO_PROCESS:
     Path(processed_folder_1).mkdir(parents=True, exist_ok=True)
     Path(processed_folder_2).mkdir(parents=True, exist_ok=True)
 
-    yearly_preview_folder = os.path.join(BASE_PREVIEW_FOLDER, folder_name)
+    yearly_preview_folder = os.path.join(BASE_PREVIEW_FOLDER, str(year))
 
     # Get the list of HTML files in the yearly preview folder.
     html_files = [f for f in os.listdir(yearly_preview_folder) if f.endswith('.html')]
@@ -142,35 +140,25 @@ for folder_name in YEARS_TO_PROCESS:
 
         # Get the team names from the <div class="team-title"> elements.
         team_title_divs = soup.find_all('div', class_='team-title')
-        team_names = [div.get_text(strip=True).lower().replace(' ', '-') for div in team_title_divs]
+        team_names = [div.get_text(strip=True).lower() for div in team_title_divs]
         # Print a warning if there are not exactly 2 team names.
         if len(team_names) != 2:
             print(f"Warning: Could not find exactly 2 team names in file {html_file_path}.")
             print(f"Team names found: {team_names}")
             exit(1)
-        found = False
+            
         for i, team_name in enumerate(team_names):
-            # Check if the team name is in the PREMIER_LEAGUE_TEAMS dictionary.
-            if team_name not in PREMIER_LEAGUE_TEAMS:
-                # If the team name is not found, check if it is in the all_names list of any team.
-                for team_key, team_data in PREMIER_LEAGUE_TEAMS.items():
-                    if team_name in team_data['all_names']:
-                        # If found, replace the team name with the key of the team.
-                        team_names[i] = team_key
-                        found = True
-                        break
-
-                if not found:
-                    print(f"Warning: Team name not found in PREMIER_LEAGUE_TEAMS for file {html_file_path}.")
-                    print(f"Team names: {team_names}")
-                    exit(1)
+            unified_team_name = get_unified_team_name(team_name)
+            if unified_team_name:
+                team_names[i] = unified_team_name
+            else:
+                print(f"Warning: Team name not found in PREMIER_LEAGUE_TEAMS for file {html_file_path}.")
+                print(f"Team name: {team_name}")
+                exit(1)
 
         # Get all the names that Sports Mole can use to refer to the teams.
         home_team_names = PREMIER_LEAGUE_TEAMS[team_names[0]]['all_names']
         away_team_names = PREMIER_LEAGUE_TEAMS[team_names[1]]['all_names']
-        # Form the names without the dashes, e.g. "brighton-and-hove-albion" becomes "brighton and hove albion".
-        home_team_names = [name.replace('-', ' ') for name in home_team_names]
-        away_team_names = [name.replace('-', ' ') for name in away_team_names]
         all_team_names = home_team_names + away_team_names
 
         # Get all <h2> elements and add a dot and a new line before them, and a colon and a space after 
@@ -203,14 +191,14 @@ for folder_name in YEARS_TO_PROCESS:
                 if element.name and element.string and FORM_REGEX.search(element.string) and \
                     not any(team_name in element.string.lower() for team_name in all_team_names):
                     # Prepend the home team name (capitalize the first letter of the team name)
-                    element.string = f"| {home_team_names[0].capitalize()} {element.string}"
+                    element.string = f"| {team_names[0].capitalize()} {element.string}"
 
             # Get the recent form elements for the away team
             for element in away_h2.next_elements:
                 if element.name and element.string and FORM_REGEX.search(element.string) and \
                     not any(team_name in element.string.lower() for team_name in all_team_names):
                     # Prepend the away team name (capitalize the first letter of the team name)
-                    element.string = f"| {away_team_names[0].capitalize()} {element.string}"
+                    element.string = f"| {team_names[1].capitalize()} {element.string}"
 
         # Get the article text from the <div class="sm-article-body"> element.
         article_text = article_body.get_text(separator=' ', strip=True)

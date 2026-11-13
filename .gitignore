@@ -1,4 +1,7 @@
-data/processed_previews
-data/raw_html_previews
+data
 src/test.py
 src/von_test.py
+__pycache__/
+*.pyc
+soccerdata_config/data
+soccerdata_config/logs
