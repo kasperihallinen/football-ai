@@ -6,7 +6,7 @@ from collections import defaultdict
 import os
 from pathlib import Path
 import json
-from teams import PREMIER_LEAGUE_TEAMS, get_unified_team_name
+from premier_league import TEAMS, get_unified_team_name
 
 # The parent folder where the HTML files of the preview articles are saved.
 BASE_PREVIEW_FOLDER = './data/sports_mole/raw_html_previews'
@@ -157,8 +157,8 @@ for year in YEARS:
                 exit(1)
 
         # Get all the names that Sports Mole can use to refer to the teams.
-        home_team_names = PREMIER_LEAGUE_TEAMS[team_names[0]]['all_names']
-        away_team_names = PREMIER_LEAGUE_TEAMS[team_names[1]]['all_names']
+        home_team_names = TEAMS[team_names[0]]['all_names']
+        away_team_names = TEAMS[team_names[1]]['all_names']
         all_team_names = home_team_names + away_team_names
 
         # Get all <h2> elements and add a dot and a new line before them, and a colon and a space after 

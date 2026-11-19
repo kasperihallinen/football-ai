@@ -1,15 +1,14 @@
+from collections import defaultdict
+import pandas as pd
+
 # Premier League teams and their corresponding years of participation in the league from 2012 to 2026. 
 # The years represent the start of the season. 
 # all_names is a list of all the names that all the sources of this project can use to refer to the teams.
 # sports_mole_name is the team name as it appears in the Sports Mole URL paths, e.g. /brighton-and-hove-albion/.
-from collections import defaultdict
-import pandas as pd
-
-
-PREMIER_LEAGUE_TEAMS = {
+TEAMS = {
     "arsenal": {
         "seasons": {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026},
-        "all_names": ['arsenal'],
+        "all_names": ['arsenal', 'arsenal fc'],
         "sports_mole_name": 'arsenal',
         "home_venue": 'Emirates Stadium',
     },
@@ -21,7 +20,7 @@ PREMIER_LEAGUE_TEAMS = {
     },
     "bournemouth": {
         "seasons": {2015, 2016, 2017, 2018, 2019, 2022, 2023, 2024, 2025, 2026},
-        "all_names": ['bournemouth'],
+        "all_names": ['bournemouth', 'afc bournemouth'],
         "sports_mole_name": 'bournemouth',
         "home_venue": 'Vitality Stadium',
     },
@@ -51,7 +50,7 @@ PREMIER_LEAGUE_TEAMS = {
     },
     "chelsea": {
         "seasons": {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026},
-        "all_names": ['chelsea'],
+        "all_names": ['chelsea', 'chelsea fc'],
         "sports_mole_name": 'chelsea',
         "home_venue": 'Stamford Bridge',
     },
@@ -68,13 +67,13 @@ PREMIER_LEAGUE_TEAMS = {
     },
     "everton": {
         "seasons": {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026},
-        "all_names": ['everton'],
+        "all_names": ['everton', 'everton fc'],
         "sports_mole_name": 'everton',
         "home_venue": ['Goodison Park', 'Hill Dickinson Stadium'],
     },
     "fulham": {
         "seasons": {2012, 2013, 2018, 2020, 2022, 2023, 2024, 2025, 2026},
-        "all_names": ['fulham'],
+        "all_names": ['fulham', 'fulham fc'],
         "sports_mole_name": 'fulham',
         "home_venue": 'Craven Cottage',
     },
@@ -109,7 +108,7 @@ PREMIER_LEAGUE_TEAMS = {
     },
     "liverpool": {
         "seasons": {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026},
-        "all_names": ['liverpool'],
+        "all_names": ['liverpool', 'liverpool fc'],
         "sports_mole_name": 'liverpool',
         "home_venue": 'Anfield',
     },
@@ -133,7 +132,7 @@ PREMIER_LEAGUE_TEAMS = {
     },
     "middlesbrough": {
         "seasons": {2016},
-        "all_names": ['middlesbrough'],
+        "all_names": ['middlesbrough', 'middlesbrough fc'],
         "sports_mole_name": 'middlesbrough',
     },
     "newcastle": {
@@ -172,7 +171,7 @@ PREMIER_LEAGUE_TEAMS = {
     },
     "southampton": {
         "seasons": {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024},
-        "all_names": ['southampton'],
+        "all_names": ['southampton', 'southampton fc'],
         "sports_mole_name": 'southampton',
         "home_venue": ["St Mary's Stadium"],
     },
@@ -183,7 +182,7 @@ PREMIER_LEAGUE_TEAMS = {
     },
     "sunderland": {
         "seasons": {2012, 2013, 2014, 2015, 2016, 2025, 2026},
-        "all_names": ['sunderland'],
+        "all_names": ['sunderland', 'sunderland afc'],
         "sports_mole_name": 'sunderland',
         "home_venue": 'Stadium of Light',
     },
@@ -206,7 +205,7 @@ PREMIER_LEAGUE_TEAMS = {
     },
     "west brom": {
         "seasons": {2012, 2013, 2014, 2015, 2016, 2017, 2020},
-        "all_names": ['west brom', 'west brom albion'],
+        "all_names": ['west brom', 'west brom albion', 'west bromwich albion'],
         "sports_mole_name": 'west-brom-albion',
         "home_venue": 'The Hawthorns',
     },
@@ -223,7 +222,7 @@ PREMIER_LEAGUE_TEAMS = {
     },
     "wolves": {
         "seasons": {2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025},
-        "all_names": ['wolves', 'wolverhampton'],
+        "all_names": ['wolves', 'wolverhampton', 'wolverhampton wanderers'],
         "sports_mole_name": 'wolves',
         "home_venue": 'Molineux Stadium',
     }
@@ -267,6 +266,48 @@ VENUES = {
     "Wembley Stadium": (51.5558, -0.2797)
 }
 
+# The start and end dates of the Premier League seasons from 2017-2018 to 2025-2026. 
+# The keys are the start years of the seasons,
+# and the values are tuples containing the start and end dates of each season in YYYY-MM-DD
+SEASONS = {
+    2017: {
+        'dates': ('2017-08-11', '2018-05-13'),
+        'fifa_release': '2017-09-29'
+    },
+    2018: {
+        'dates': ('2018-08-10', '2019-05-12'), 
+        'fifa_release': '2018-09-28'
+        },
+    2019: {
+        'dates': ('2019-08-09', '2020-07-26'), 
+        'fifa_release': '2019-09-27'
+    },
+    2020: {
+        'dates': ('2020-09-12', '2021-05-23'), 
+        'fifa_release': '2020-10-09'
+    },
+    2021: {
+        'dates': ('2021-08-13', '2022-05-22'), 
+        'fifa_release': '2021-10-01'
+    },
+    2022: {
+        'dates': ('2022-08-05', '2023-05-28'), 
+        'fifa_release': '2022-09-30'
+    },
+    2023: {
+        'dates': ('2023-08-11', '2024-05-19'), 
+        'fifa_release': '2023-09-29'
+    },
+    2024: {
+        'dates': ('2024-08-16', '2025-05-25'), 
+        'fifa_release': '2024-09-27'
+    },
+    2025: {
+        'dates': ('2025-08-15', '2026-05-24'), 
+        'fifa_release': '2025-09-26'
+    },
+}
+
 
 def get_all_teams(use_hyphens=False):
     """
@@ -275,7 +316,7 @@ def get_all_teams(use_hyphens=False):
     If use_hyphens is True, the names will use hyphens instead of spaces.
     """
     premier_league_teams = []
-    for team, data in PREMIER_LEAGUE_TEAMS.items():
+    for team, data in TEAMS.items():
         if use_hyphens:
             # Use hyphens instead of spaces
             all_names = [name.replace(' ', '-') for name in data["all_names"]]
@@ -302,7 +343,7 @@ def get_year_to_teams(years=range(2017, 2028)):
     # dict that maps the years to the teams that participated in the Premier League during that year
     year_to_teams = defaultdict(lambda: defaultdict(list))
     for year in years:
-        for team, values in PREMIER_LEAGUE_TEAMS.items():
+        for team, values in TEAMS.items():
             # The years in values['seasons'] represent the start of the season. 
             # To get all the years that the team played in the Premier League, 
             # we need to add 1 to each year to get also the end of the season.
@@ -318,7 +359,7 @@ def unify_team_names(df, team_column):
     Unify the team names in the given DataFrame column to the standardized names from the teams module.
     This function modifies the DataFrame in place.
     """
-    for team_key, team_info in PREMIER_LEAGUE_TEAMS.items():
+    for team_key, team_info in TEAMS.items():
         for name in team_info["all_names"]:
             df.loc[df[team_column].str.lower() == name, team_column] = team_key
 
@@ -328,7 +369,7 @@ def get_unified_name(team_name):
     Get the unified name for a given team name.
     If the team name is not found in the PREMIER_LEAGUE_TEAMS dictionary, return None.
     """
-    for team_key, team_info in PREMIER_LEAGUE_TEAMS.items():
+    for team_key, team_info in TEAMS.items():
         if team_name.lower() in [name.lower() for name in team_info["all_names"]]:
             return team_key
     return None

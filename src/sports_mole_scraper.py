@@ -6,7 +6,7 @@ import re
 import pandas as pd
 import os
 from pathlib import Path
-from teams import get_year_to_teams
+from premier_league import get_year_to_teams
 
 BASE_URL = 'https://www.sportsmole.co.uk'
 # Folder where the URLs of the preview articles for Premier League matches are stored. 

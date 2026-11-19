@@ -3,5 +3,6 @@ src/test.py
 src/von_test.py
 __pycache__/
 *.pyc
+downloaded_files/
 soccerdata_config/data
 soccerdata_config/logs

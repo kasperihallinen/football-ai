@@ -3,7 +3,7 @@
 # analysis and modeling.
 
 import pandas as pd
-from teams import unify_team_names
+from premier_league import unify_team_names
 
 XGABORA_PATH = "./data/xgabora_github/"
 
