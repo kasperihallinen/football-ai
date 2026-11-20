@@ -9,57 +9,148 @@ FBREF_PATH = "./data/fbref/"
 XGABORA_PATH = "./data/xgabora_github/"
 
 
-def calculate_standings():
+def calculate_cumulative_standings():
     """
-    Calculate the final standings for each season of the Premier League based
-    on match results.
-    The resulting csv contains the following columns: season, matches played
-    (MP), wins (W), draws (D), losses (L), goals for (GF), goals against (GA),
-    points (Pts) and goal difference (GD).
+    Calculate the standings before each matchday of the Premier League based on
+    match results.
+    The resulting csv contains the season, date, team, and the following
+    cumulative stats before each matchday: matches played (MP), wins (CW), draws
+    (CD), losses (CL), points (CPTS), goals for (CGF), goals against (CGA),
+    goal difference (CGD), and rank.
     """
+    output_file = XGABORA_PATH + "cumulative_standings.csv"
+    df = pd.read_csv(XGABORA_PATH + "match_data.csv")
 
-    output_file = XGABORA_PATH + "standings.csv"
-    matches_df = pd.read_csv(XGABORA_PATH + "match_data.csv")
+    # Ensure data is sorted chronologically
+    df["date"] = pd.to_datetime(df["date"])
+    df = df.sort_values(["season", "date"]).reset_index(drop=True)
+    df["match_id"] = df.index  # Unique ID to merge back later
 
-    # Build home and away match records
-    home = matches_df[["season", "home_team", "FTHome", "FTAway"]].rename(
-        columns={"home_team": "team", "FTHome": "GF", "FTAway": "GA"}
+    # Create Home perspective
+    home_df = pd.DataFrame(
+        {
+            "match_id": df["match_id"],
+            "season": df["season"],
+            "date": df["date"],
+            "team": df["home_team"],
+            "GF": df["FTHome"],
+            "GA": df["FTAway"],
+        }
     )
-    away = matches_df[["season", "away_team", "FTAway", "FTHome"]].rename(
-        columns={"away_team": "team", "FTAway": "GF", "FTHome": "GA"}
+    # Create Away perspective
+    away_df = pd.DataFrame(
+        {
+            "match_id": df["match_id"],
+            "season": df["season"],
+            "date": df["date"],
+            "team": df["away_team"],
+            "GF": df["FTAway"],
+            "GA": df["FTHome"],
+        }
     )
-    df = pd.concat([home, away])
+    team_df = (
+        pd.concat([home_df, away_df])
+        .sort_values(["season", "date", "match_id"])
+        .reset_index(drop=True)
+    )
 
     # Calculate W, D, L, and Points
-    df["MP"] = 1
-    df["W"] = (df["GF"] > df["GA"]).astype(int)
-    df["D"] = (df["GF"] == df["GA"]).astype(int)
-    df["L"] = (df["GF"] < df["GA"]).astype(int)
-    df["Pts"] = df["W"] * 3 + df["D"]
+    team_df["W"] = (team_df["GF"] > team_df["GA"]).astype(int)
+    team_df["D"] = (team_df["GF"] == team_df["GA"]).astype(int)
+    team_df["L"] = (team_df["GF"] < team_df["GA"]).astype(int)
+    team_df["PTS"] = team_df["W"] * 3 + team_df["D"]
+    team_df["GD"] = team_df["GF"] - team_df["GA"]
 
-    standings = df.groupby(["season", "team"])[
-        ["MP", "W", "D", "L", "GF", "GA", "Pts"]
-    ].sum()
-    standings["GD"] = standings["GF"] - standings["GA"]
-    standings = standings.sort_values(
-        by=["season", "Pts", "GD", "GF"], ascending=False
+    grouped = team_df.groupby(["season", "team"])
+
+    # Calculate cumulative stats after each match
+    team_df["MP"] = grouped.cumcount() + 1
+    team_df["CW"] = grouped["W"].cumsum()
+    team_df["CD"] = grouped["D"].cumsum()
+    team_df["CL"] = grouped["L"].cumsum()
+    team_df["CPTS"] = grouped["PTS"].cumsum()
+    team_df["CGF"] = grouped["GF"].cumsum()
+    team_df["CGA"] = grouped["GA"].cumsum()
+    team_df["CGD"] = grouped["GD"].cumsum()
+
+    # Get unique match dates per season
+    dates = team_df[["season", "date"]].drop_duplicates()
+
+    # Create a "Final Standings" date (1 day after the last match of each
+    # season)
+    final_dates = dates.groupby("season")["date"].max().reset_index()
+    final_dates["date"] = final_dates["date"] + pd.Timedelta(days=1)
+
+    # Combine regular matchdays with the final standings date
+    all_dates = pd.concat(
+        [dates, final_dates], ignore_index=True
+    ).drop_duplicates()
+    teams = team_df[["season", "team"]].drop_duplicates()
+
+    # Cross-join dates and teams within each season to build a full timeline
+    standings = pd.merge(all_dates, teams, on="season")
+
+    # Merge the latest cumulative stats up to each date
+    standings = pd.merge_asof(
+        standings.sort_values("date"),
+        team_df.sort_values("date"),
+        on="date",
+        by=["season", "team"],
+        direction="backward",
+        allow_exact_matches=False,
+    ).fillna(
+        {
+            "MP": 0,
+            "CW": 0,
+            "CD": 0,
+            "CL": 0,
+            "CPTS": 0,
+            "CGF": 0,
+            "CGA": 0,
+            "CGD": 0,
+        }
     )
 
-    # If MP of a team in previous seasons is not 38, print a warning message
-    current_season = standings.index.get_level_values(0).max()
-    for season in standings.index.get_level_values(0).unique():
-        season_standings = standings.loc[season]
-        if season != current_season and (season_standings["MP"] != 38).any():
-            print(
-                f"\nWarning: Not all teams played 38 matches in season {season}."
-            )
-            print(season_standings[season_standings["MP"] != 38])
+    # Create a tuple of tie-breakers (Points, Goal Difference, Goals For)
+    standings["tie_breaker"] = list(
+        zip(standings["CPTS"], standings["CGD"], standings["CGF"])
+    )
 
-    print("\nStandings:")
-    print(standings)
+    # Rank teams so identical tuples receive the same rank (e.g., 1, 2, 2, 4)
+    standings["rank"] = (
+        standings.groupby(["season", "date"])["tie_breaker"]
+        .rank(method="min", ascending=False)
+        .astype(int)
+    )
 
-    # Save the standings to a CSV file
-    standings.to_csv(output_file)
+    # Drop the helper column
+    standings = standings.drop(columns=["tie_breaker"])
+
+    standings = standings.sort_values(["season", "date", "rank"])
+
+    # Keep only the relevant columns
+    standings = standings[
+        [
+            "season",
+            "date",
+            "team",
+            "MP",
+            "CW",
+            "CD",
+            "CL",
+            "CPTS",
+            "CGF",
+            "CGA",
+            "CGD",
+            "rank",
+        ]
+    ]
+
+    print("\nCumulative Standings:")
+    print(standings.tail(20))
+
+    print(f"\nSaving cumulative standings to {output_file}")
+    standings.to_csv(output_file, index=False)
 
 
-# calculate_standings()
+calculate_cumulative_standings()
