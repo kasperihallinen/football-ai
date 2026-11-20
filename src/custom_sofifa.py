@@ -12,15 +12,15 @@ SO_FIFA_API = "https://sofifa.com"
 
 class SoFIFA(SoFIFA):
     """
-    Custom SoFIFA scraper with an added method to fetch player name, id, league, age, overall rating, 
-    potential rating, team, height, weigth, value and wage.
+    Custom SoFIFA scraper with an added method to fetch player name, id,
+    league, age, overall rating, potential rating, team, height, weigth, value
+    and wage.
     """
 
     @classmethod
     def available_leagues(cls) -> list[str]:
         return SoFIFA.available_leagues()
 
-    
     def read_player_attributes(self) -> pd.DataFrame:
         """Retrieve player attributes for all players in the selected leagues.
 
@@ -42,10 +42,7 @@ class SoFIFA(SoFIFA):
         }
 
         # Build URL
-        urlmask = (
-            SO_FIFA_API
-            + "/players?type=all&lg[]={}&r={}&set=true"
-        )
+        urlmask = SO_FIFA_API + "/players?type=all&lg[]={}&r={}&set=true"
 
         for attribute_id in attributes:
             urlmask += f"&showCol[]={attribute_id}"
@@ -74,7 +71,9 @@ class SoFIFA(SoFIFA):
                 filepath = self.data_dir / (
                     f"player_attributes_{league_id}_{version_id}_{offset}.html"
                 )
-                url = urlmask.format(league_id, version_id) + f"&offset={offset}"
+                url = (
+                    urlmask.format(league_id, version_id) + f"&offset={offset}"
+                )
                 reader = self.get(url, filepath)
 
                 tree = html.parse(
@@ -123,14 +122,10 @@ class SoFIFA(SoFIFA):
                             f".//td[@data-col='{attribute_id}']//text()"
                         )
                         value = " ".join(
-                            text.strip()
-                            for text in value
-                            if text.strip()
+                            text.strip() for text in value if text.strip()
                         )
 
-                        player_data[description] = (
-                            value if value else None
-                        )
+                        player_data[description] = value if value else None
 
                     players.append(player_data)
 
